@@ -1,4 +1,4 @@
-FROM ghcr.io/ucsd-ets/datascience:stable
+FROM ghcr.io/ucsd-ets/datascience:2023.4-stable
 
 LABEL maintainer="UC San Diego ITS/ETS <ets-consult@ucsd.edu>"
 
