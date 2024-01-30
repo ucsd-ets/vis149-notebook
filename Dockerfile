@@ -13,16 +13,26 @@ USER root
 #  apt-get install -qy p7zip-full software-properties-common && \
 #  apt-get clean && \
 #  rm -rf /var/lib/apt/lists/*  && \
-RUN wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 && \
+#             https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+#RUN wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 && \
 #  apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub && \
-  wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda-keyring_1.0-1_all.deb && \
-  dpkg -i cuda-keyring_1.0-1_all.deb && \
-  add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /" && \
-  apt-get -q update && \
-  apt-get install -qqy cuda-11-1 cuda-nvcc-11-1	cuda-toolkit-11-1 && \
-  wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libcudnn8_8.0.5.39-1+cuda11.1_amd64.deb -O /var/tmp/libcudnn8.deb  && \
-  wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libnccl2_2.8.4-1+cuda11.1_amd64.deb -O /var/tmp/libnccl2.deb  && \
-  dpkg -i /var/tmp/libcudnn8.deb /var/tmp/libnccl2.deb  && \
+#  wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda-keyring_1.0-1_all.deb && \
+#  dpkg -i cuda-keyring_1.0-1_all.deb && \
+#  add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /" && \
+#  apt-get -q update && \
+#  apt-get install -qqy cuda-11-1 cuda-nvcc-11-1	cuda-toolkit-11-1 && \
+
+# install cuda toolkit 
+# https://developer.nvidia.com/cuda-11.1.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=debnetwork
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin && \
+    mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600  && \
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub  && \
+    add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"  && \
+    apt-get update  && \
+    apt-get -y install cuda && \
+#  wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libcudnn8_8.0.5.39-1+cuda11.1_amd64.deb -O /var/tmp/libcudnn8.deb  && \
+#  wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libnccl2_2.8.4-1+cuda11.1_amd64.deb -O /var/tmp/libnccl2.deb  && \
+#  dpkg -i /var/tmp/libcudnn8.deb /var/tmp/libnccl2.deb  && \
   fix-permissions $CONDA_DIR  && \
   fix-permissions /home/$NB_USER
 
