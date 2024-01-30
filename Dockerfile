@@ -6,14 +6,14 @@ LABEL maintainer="UC San Diego ITS/ETS <ets-consult@ucsd.edu>"
 USER root
 
 
-RUN apt-get -q update && \
-  apt-get -qy install apt-utils  && \
-  apt-get -qy dist-upgrade && \
-  apt-get -qy auto-remove && \
-  apt-get install -qy p7zip-full software-properties-common && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*  && \
-  wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 && \
+#RUN apt-get -q update && \
+#  apt-get -qy install apt-utils  && \
+#  apt-get -qy dist-upgrade && \
+#  apt-get -qy auto-remove && \
+#  apt-get install -qy p7zip-full software-properties-common && \
+#  apt-get clean && \
+#  rm -rf /var/lib/apt/lists/*  && \
+RUN wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 && \
 #  apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub && \
   wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda-keyring_1.0-1_all.deb && \
   dpkg -i cuda-keyring_1.0-1_all.deb && \
