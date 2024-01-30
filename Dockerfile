@@ -14,8 +14,10 @@ RUN apt-get -q update && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*  && \
   wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 && \
-  apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub  && \
-  add-apt-repository \"deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /\"  && \
+#  apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub && \
+  wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda-keyring_1.0-1_all.deb && \
+  dpkg -i cuda-keyring_1.0-1_all.deb && \
+  add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /" && \
   apt-get -q update && \
   apt-get install -qqy cuda-11-1 cuda-nvcc-11-1	cuda-toolkit-11-1 && \
   wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libcudnn8_8.0.5.39-1+cuda11.1_amd64.deb -O /var/tmp/libcudnn8.deb  && \
