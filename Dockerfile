@@ -46,7 +46,7 @@ RUN apt-get -q update && \
 #(nop)  ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/cuda/bin
 
 
-COPY env.yaml /tmp/env.yml
+COPY env.yml /tmp/env.yml
 
 RUN conda env create --file /tmp/env.yml && \
     eval "$(conda shell.bash hook)" && \
