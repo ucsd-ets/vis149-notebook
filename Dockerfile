@@ -1,82 +1,98 @@
-FROM ghcr.io/ucsd-ets/datascience-notebook:2023.4-stable
-
-LABEL maintainer="UC San Diego ITS/ETS <ets-consult@ucsd.edu>"
+# base notebook, contains Jupyter and relevant tools
+# See https://urldefense.com/v3/__https://github.com/ucsd-ets/datahub-docker-stack/wiki/Stable-Tag__;!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-zztWoVxF$
+# for a list of the most current containers we maintain
 #
-# 2) change to root to install packages
-USER root
+# datahub-base-notebook:2020.2.9 has Python 3.7.6
+ARG     BASE_CONTAINER=ucsdets/datahub-base-notebook:2020.2.9
+ARG     CONDA_DIR=/opt/conda
+ARG     NB_USER=jovyan
 
+FROM    $BASE_CONTAINER
 
-#RUN apt-get -q update && \
-#  apt-get -qy install apt-utils  && \
-#  apt-get -qy dist-upgrade && \
-#  apt-get -qy auto-remove && \
-#  apt-get install -qy p7zip-full software-properties-common && \
-#  apt-get clean && \
-#  rm -rf /var/lib/apt/lists/*  && \
-#             https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-#RUN wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 && \
-#  apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub && \
-#  wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda-keyring_1.0-1_all.deb && \
-#  dpkg -i cuda-keyring_1.0-1_all.deb && \
-#  add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /" && \
-#  apt-get -q update && \
-#  apt-get install -qqy cuda-11-1 cuda-nvcc-11-1	cuda-toolkit-11-1 && \
+ENV     NB_GID=100
+ENV     PYTHONDONTWRITEBYTECODE 1
+ENV     PYTHONUNBUFFERED 1
 
-# install cuda toolkit 
-# https://developer.nvidia.com/cuda-11.1.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=debnetwork
-RUN apt-get update && \
-    apt-get install -y p7zip-full software-properties-common && \
-    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin && \
-    mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600  && \
-    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub  && \
-    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub  && \
-    add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /" && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /etc/apt/sources.list.d/cuda.list && \
-    rm -rf /etc/apt/sources.list.d/nvidia-ml.list && \
-    apt-get update  && \
-#apt-get -y install cuda && \
-    apt-get install -qqy cuda-11-1 cuda-nvcc-11-1	cuda-toolkit-11-1 && \
-    
-#  wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libcudnn8_8.0.5.39-1+cuda11.1_amd64.deb -O /var/tmp/libcudnn8.deb  && \
-#  wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libnccl2_2.8.4-1+cuda11.1_amd64.deb -O /var/tmp/libnccl2.deb  && \
-#  dpkg -i /var/tmp/libcudnn8.deb /var/tmp/libnccl2.deb  && \
-  fix-permissions $CONDA_DIR  && \
-  fix-permissions /home/$NB_USER
+# change to root to install packages
+USER    root
 
+RUN     apt-get -q update && \
+        apt-get -qy install apt-utils && \
+        apt-get -qy dist-upgrade && \
+        apt-get -qy auto-remove && \
+        apt-get install -qy \
+                p7zip-full \
+                software-properties-common && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/*
 
-# apt-get -q update
-# apt-get -qy install apt-utils
-# apt-get -qy dist-upgrade 
-# apt-get -qy auto-remove 
-# apt-get install -qy		p7zip-full 		software-properties-common 
-# apt-get clean 
-# rm -rf /var/lib/apt/lists/*"
-# wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 \u0026\u0026 	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub \u0026\u0026 	add-apt-repository \"deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /\" \u0026\u0026 	apt-get -q update \u0026\u0026 	apt-get install -qqy 		cuda-11-1 		cuda-nvcc-11-1 		cuda-toolkit-11-1 \u0026\u0026 	wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libcudnn8_8.0.5.39-1+cuda11.1_amd64.deb -O /var/tmp/libcudnn8.deb \u0026\u0026 	wget -nv https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libnccl2_2.8.4-1+cuda11.1_amd64.deb -O /var/tmp/libnccl2.deb \u0026\u0026 	dpkg -i /var/tmp/libcudnn8.deb /var/tmp/libnccl2.deb"
-#fix-permissions $CONDA_DIR \u0026\u0026 	fix-permissions /home/$NB_USER"
-#/opt/conda/bin/python3 -m pip install --upgrade pip"
-#/opt/conda/bin/conda install -y 		jaxlib==0.1.55 		tensorboard"
-#pip install torch 		-f https://download.pytorch.org/whl/rocm4.0.1/torch_stable.html \u0026\u0026 	pip install ninja \u0026\u0026 	pip install 'git+https://github.com/pytorch/vision.git@v0.9.0'"
-#pip install --no-cache-dir 		torch==1.8.0+cu111 		torchvision==0.9.0+cu111 		torchaudio==0.8.0 		-f https://download.pytorch.org/whl/torch_stable.html"
-#pip install --no-cache-dir 		gdown 		imageio-ffmpeg==0.4.3 		jax==0.1.73 		opencv-contrib-python-headless 		opencv-python 		opensimplex 		pillow 		pyspng==0.1.0 		networkx 		scipy"
-#(nop)  USER root
-#(nop) COPY dir:36a36661fdff68aec2767c0def27d2808864e4eca0678ba1eb7e93151342e0cb in /usr/share/datahub/tests/scipy-ml-notebook "
-#chmod -R +x /usr/share/datahub/tests/scipy-ml-notebook \u0026\u0026 	chown -R 1000:100 /home/jovyan \u0026\u0026 	chmod +x /run_jupyter.sh"
-#(nop)  USER 1000:100
-#(nop)  ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/cuda/bin
+# CUDA 11
+RUN     wget -nv https://urldefense.com/v3/__https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin__;!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-z6xyXVXU$  -O /etc/apt/preferences.d/cuda-repository-pin-600 && \
+        apt-key adv --fetch-keys https://urldefense.com/v3/__https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub__;!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-zy96UN_p$  && \
+        add-apt-repository "deb https://urldefense.com/v3/__http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/__;!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-z1ptww6x$  /" && \
+        apt-get -q update && \
+        apt-get install -qqy \
+                cuda-11-1 \
+                cuda-nvcc-11-1 \
+                cuda-toolkit-11-1 && \
+        wget -nv https://urldefense.com/v3/__https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libcudnn8_8.0.5.39-1*cuda11.1_amd64.deb__;Kw!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-z23hZqFj$  -O /var/tmp/libcudnn8.deb && \
+        wget -nv https://urldefense.com/v3/__https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libnccl2_2.8.4-1*cuda11.1_amd64.deb__;Kw!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-z9s2UILA$  -O /var/tmp/libnccl2.deb && \
+        dpkg -i /var/tmp/libcudnn8.deb /var/tmp/libnccl2.deb
 
+RUN     fix-permissions $CONDA_DIR && \
+        fix-permissions /home/$NB_USER
 
-COPY env.yml /tmp/env.yml
+# Conda & Pip pkg installs
+USER    jovyan
 
-RUN conda env create --file /tmp/env.yml && \
-    eval "$(conda shell.bash hook)" && \
-    conda activate ${KERNEL} && \
-    mkdir -p $CONDA_PREFIX/etc/conda/activate.d && \
-#    CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)")) && \
-#    echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh && \
-    python -m ipykernel install --name=${KERNEL} && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+RUN     /opt/conda/bin/python3 -m pip install --upgrade pip
 
-# 3) install packages using notebook user
-USER jovyan
+# Tensorboard & jaxlib
+RUN     /opt/conda/bin/conda install -y \
+                jaxlib==0.1.55 \
+                tensorboard
+
+# RocM 4.0.1 (Linux only)
+RUN     pip install torch \
+                -f https://urldefense.com/v3/__https://download.pytorch.org/whl/rocm4.0.1/torch_stable.html__;!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-zzTLvttR$  && \
+        pip install ninja && \
+        pip install 'git+https://github.com/pytorch/vision.git@v0.9.0'
+
+# PyTorch
+RUN     pip install --no-cache-dir \
+                torch==1.8.0+cu111 \
+                torchvision==0.9.0+cu111 \
+                torchaudio==0.8.0 \
+                -f https://urldefense.com/v3/__https://download.pytorch.org/whl/torch_stable.html__;!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-zxYAF2xj$
+
+# Other pkgs
+RUN     pip install --no-cache-dir \
+                gdown \
+                imageio-ffmpeg==0.4.3 \
+                jax==0.1.73 \
+                opencv-contrib-python-headless \
+                opencv-python \
+                opensimplex \
+                pillow \
+                pyspng==0.1.0 \
+                networkx \
+                scipy
+
+# Unset TORCH_CUDA_ARCH_LIST and exec.  This makes pytorch run-time
+# extension builds significantly faster as we only compile for the
+# currently active GPU configuration.
+#RUN (printf '#!/bin/bash\nunset TORCH_CUDA_ARCH_LIST\nexec \"$@\"\n' >> /entry.sh) && chmod a+x /entry.sh
+#ENTRYPOINT ["/entry.sh"]
+
+USER    root
+
+COPY    ./tests/ /usr/share/datahub/tests/scipy-ml-notebook
+RUN     chmod -R +x /usr/share/datahub/tests/scipy-ml-notebook && \
+        chown -R 1000:100 /home/jovyan && \
+        chmod +x /run_jupyter.sh
+
+USER    $NB_UID:$NB_GID
+ENV     PATH=${PATH}:/usr/local/cuda/bin
+
+# Override command to disable running jupyter notebook at launch
+# CMD ["/bin/bash"]
