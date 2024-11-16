@@ -7,7 +7,7 @@ USER root
 
 
 
-# install cuda toolkit 11-1
+# install cuda 11-1 and toolkit
 # https://developer.nvidia.com/cuda-11.1.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=debnetwork
 RUN apt-get update && \
     apt-get install -y p7zip-full software-properties-common && \
@@ -21,7 +21,10 @@ RUN apt-get update && \
     rm -rf /etc/apt/sources.list.d/nvidia-ml.list && \
     apt-get update  && \
 #apt-get -y install cuda && \
-    apt-get install -qqy cuda-11-1 cuda-nvcc-11-1   cuda-toolkit-11-1 && \
+    apt-get install -qqy cuda-11-1 cuda-nvcc-11-1  cuda-toolkit-11-1 && \
+    wget -nv https://urldefense.com/v3/__https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libcudnn8_8.0.5.39-1*cuda11.1_amd64.deb__;Kw!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-z23hZqFj$  -O /var/tmp/libcudnn8.deb && \
+    wget -nv https://urldefense.com/v3/__https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libnccl2_2.8.4-1*cuda11.1_amd64.deb__;Kw!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-z9s2UILA$  -O /var/tmp/libnccl2.deb && \
+    dpkg -i /var/tmp/libcudnn8.deb /var/tmp/libnccl2.deb
 
     fix-permissions $CONDA_DIR  && \
     fix-permissions /home/$NB_USER
