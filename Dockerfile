@@ -44,7 +44,7 @@ USER jovyan
 # other packages here... 
 
 # From the "original" 2022 version: 
-USER    $NB_UID:$NB_GID
+# USER    $NB_UID:$NB_GID
 ENV     PATH=${PATH}:/usr/local/cuda/bin
 
 
