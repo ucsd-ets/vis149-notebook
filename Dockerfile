@@ -26,7 +26,7 @@ RUN apt-get update && \
     wget -nv https://urldefense.com/v3/__https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libnccl2_2.8.4-1*cuda11.1_amd64.deb__;Kw!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-z9s2UILA$  -O /var/tmp/libnccl2.deb && \
     dpkg -i /var/tmp/libcudnn8.deb /var/tmp/libnccl2.deb
 
-    fix-permissions $CONDA_DIR  && \
+RUN fix-permissions $CONDA_DIR  && \
     fix-permissions /home/$NB_USER
 
 
