@@ -29,8 +29,6 @@ RUN     apt-get -q update && \
 
 
 
-
-
 COPY env.yml /tmp/env.yml
 
 RUN conda env create --file /tmp/env.yml && \
@@ -40,14 +38,15 @@ RUN conda env create --file /tmp/env.yml && \
    # CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)")) && \
    # echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh && \
     python -m ipykernel install --name=${KERNEL} && \
-    # Maybe just with the Runtimes? 
-    conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=11.1 -c pytorch -c conda-forge && \
+
+    # conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=11.1 -c pytorch -c conda-forge && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
 # 3) install packages using notebook user
 USER jovyan
 # other packages here... 
+
 
 # From the "original" 2022 version: 
 # USER    $NB_UID:$NB_GID
