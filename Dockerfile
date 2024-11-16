@@ -27,8 +27,8 @@ RUN     apt-get -q update && \
 #     wget -nv https://urldefense.com/v3/__https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libnccl2_2.8.4-1*cuda11.1_amd64.deb__;Kw!!Mih3wA!Gdyp1ukt20BXVegNBzmgDfWhJBT9wJRv0kfA_Go0MCt8kLnGgWIlIwf4enXHKWsp-Mfo5Hrl5w5FGlY-z9s2UILA$  -O /var/tmp/libnccl2.deb && \
 #     dpkg -i /var/tmp/libcudnn8.deb /var/tmp/libnccl2.deb
 
-# Maybe just with the Runtimes? 
-conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=11.1 -c pytorch -c conda-forge
+
+
 
 
 COPY env.yml /tmp/env.yml
@@ -40,6 +40,8 @@ RUN conda env create --file /tmp/env.yml && \
    # CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)")) && \
    # echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh && \
     python -m ipykernel install --name=${KERNEL} && \
+    # Maybe just with the Runtimes? 
+    conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=11.1 -c pytorch -c conda-forge && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
