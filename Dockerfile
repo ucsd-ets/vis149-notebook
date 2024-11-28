@@ -1,4 +1,4 @@
-FROM ghcr.io/ucsd-ets/datascience-notebook:2023.4-stable
+FROM ghcr.io/ucsd-ets/datascience-notebook:2024.4-stable
 
 LABEL maintainer="UC San Diego ITS/ETS <ets-consult@ucsd.edu>"
 #
@@ -31,7 +31,7 @@ RUN     apt-get -q update && \
 
 COPY env.yml /tmp/env.yml
 
-RUN conda env create --file /tmp/env.yml && \
+RUN mamba env create --file /tmp/env.yml && \
     eval "$(conda shell.bash hook)" && \
     conda activate ${KERNEL} && \
     mkdir -p $CONDA_PREFIX/etc/conda/activate.d && \
@@ -46,7 +46,6 @@ RUN conda env create --file /tmp/env.yml && \
 # 3) install packages using notebook user
 USER jovyan
 # other packages here... 
-
 
 # From the "original" 2022 version: 
 # USER    $NB_UID:$NB_GID
