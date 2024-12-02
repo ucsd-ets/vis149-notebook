@@ -1,3 +1,5 @@
+#coerce build
+
 FROM ghcr.io/ucsd-ets/datascience-notebook:2024.4-stable
 
 LABEL maintainer="UC San Diego ITS/ETS <ets-consult@ucsd.edu>"
