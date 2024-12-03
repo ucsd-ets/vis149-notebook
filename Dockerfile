@@ -33,6 +33,10 @@ RUN     apt-get -q update && \
 
 COPY env.yml /tmp/env.yml
 
+RUN mamba install nb_conda_kernels && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
 RUN mamba env create --file /tmp/env.yml && \
     eval "$(conda shell.bash hook)" && \
     conda activate ${KERNEL} && \
