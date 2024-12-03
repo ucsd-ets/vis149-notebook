@@ -35,7 +35,7 @@ COPY env.yml /tmp/env.yml
 
 RUN mamba env create --file /tmp/env.yml && \
     eval "$(conda shell.bash hook)" && \
-    mamba activate ${KERNEL} && \
+    conda activate ${KERNEL} && \
     mkdir -p $CONDA_PREFIX/etc/conda/activate.d && \
    # CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)")) && \
    # echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh && \
