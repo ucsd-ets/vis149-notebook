@@ -35,11 +35,11 @@ COPY env.yml /tmp/env.yml
 
 RUN mamba env create --file /tmp/env.yml && \
     eval "$(conda shell.bash hook)" && \
-    conda activate ${KERNEL} && \
+    mamba activate ${KERNEL} && \
     mkdir -p $CONDA_PREFIX/etc/conda/activate.d && \
    # CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)")) && \
    # echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh && \
-    python -m ipykernel install --name=${KERNEL} && \
+    python -m ipykernel install --name=${KERNEL} --display-name "Python (${KERNEL})" && \
 
     # conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=11.1 -c pytorch -c conda-forge && \
     fix-permissions $CONDA_DIR && \
@@ -47,6 +47,11 @@ RUN mamba env create --file /tmp/env.yml && \
 
 # 3) install packages using notebook user
 USER jovyan
+
+RUN eval "$(conda shell.bash hook)" && \
+    conda activate ${KERNEL} && \
+    python -m ipykernel install --user --name=${KERNEL} --display-name "Python (${KERNEL})"
+
 # other packages here... 
 
 # From the "original" 2022 version: 
