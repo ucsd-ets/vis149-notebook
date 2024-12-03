@@ -48,10 +48,6 @@ RUN mamba env create --file /tmp/env.yml && \
 # 3) install packages using notebook user
 USER jovyan
 
-RUN eval "$(conda shell.bash hook)" && \
-    conda activate ${KERNEL} && \
-    python -m ipykernel install --user --name=${KERNEL} --display-name "Python (${KERNEL})"
-
 # other packages here... 
 
 # From the "original" 2022 version: 
